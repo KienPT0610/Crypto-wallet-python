@@ -130,9 +130,17 @@
                     </form>
                 </div>
                 {% else %}
+                <div class="flex justify-center">
+                    <form action="">
+                        <input type="text" name="username" placeholder="username..." required>
+                        <input type="password" name="password" placeholder="password" required>
+                        <button class="bg-primary text-primary-foreground p-2 rounded-lg" type="submit">Login</button>
+                    </form>
+                </div>
                 <div class='flex justify-around' >
                     <form action="/create" method="post">
-                        <button class="bg-primary text-primary-foreground p-2 rounded-lg" type="submit">Create Wallet</button>
+                        <input class="rounded-lg" type="text" name="username" placeholder="user name wallet" required>
+                        <button class="bg-primary text-primary-foreground p-2 rounded-lg" type="submit" onclick="">Create Wallet</button>
                     </form>
                 </div>
                 <div class="flex space-x-4 mb-6">
