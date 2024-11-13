@@ -1,23 +1,19 @@
-from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
-from cryptography.hazmat.backends import default_backend
-import os
+from cryptography.fernet import Fernet
 
-# Tạo khóa AES 256 bit và IV 128 bit
-key = os.urandom(32)  # Khóa 256 bit
-iv = os.urandom(16)   # Vector khởi tạo 128 bit
+# Tạo khóa bí mật mới để mã hóa và giải mã
+def generate_key():
+    return Fernet.generate_key()
 
-# Hàm mã hóa
-def encrypt(data):
-    cipher = Cipher(algorithms.AES(key), modes.CBC(iv), backend=default_backend())
-    encryptor = cipher.encryptor()
-    padded_data = data.encode() + b"\0" * (16 - len(data) % 16)  # Padding dữ liệu
-    encrypted = encryptor.update(padded_data) + encryptor.finalize()
-    return encrypted
+# Mã hóa văn bản
+def encrypt(message, key):
+    fernet = Fernet(key)
+    encrypted_message = fernet.encrypt(message.encode())
+    return encrypted_message
 
-# Hàm giải mã
-def decrypt(encrypted_data):
-    cipher = Cipher(algorithms.AES(key), modes.CBC(iv), backend=default_backend())
-    decryptor = cipher.decryptor()
-    decrypted = decryptor.update(encrypted_data) + decryptor.finalize()
-    return decrypted.rstrip(b"\0").decode()  # Xóa padding
+# Giải mã văn bản
+def decrypt(encrypted_message, key):
+    fernet = Fernet(key)
+    decrypted_message = fernet.decrypt(encrypted_message).decode()
+    return decrypted_message
+
 
