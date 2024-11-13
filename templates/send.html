@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Send Tokens</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-gray-100 font-sans text-gray-800">
+    <div class="max-w-md mx-auto p-6">
+        <!-- Header Section -->
+        <header class="flex items-center justify-between mb-6">
+            <button class="text-gray-600">
+                <i class="fas fa-arrow-left"></i> Go back
+            </button>
+            <h1 class="text-3xl font-bold">Send</h1>
+            <button class="p-2 text-gray-600 rounded-full">
+                <i class="fas fa-cog"></i>
+            </button>
+        </header>
+
+        <!-- Send / Message Tab -->
+        <div class="flex mb-4">
+            <button class="w-1/2 text-center py-2 font-semibold border-b-2 border-black">Send</button>
+            <button class="w-1/2 text-center py-2 font-semibold text-gray-400 border-b-2">Message</button>
+        </div>
+
+        <!-- Token Selection -->
+        <div class="bg-white p-4 shadow rounded-lg mb-4">
+            <label for="token" class="block text-sm font-medium text-gray-700">Sending Token</label>
+            <select id="token" class="w-full p-2 mt-1 border rounded-lg focus:ring-2 focus:ring-indigo-500">
+                <option>KAIA - Kaia Kairos</option>
+            </select>
+        </div>
+
+        <!-- Balance Section -->
+        <div class="bg-white p-4 shadow rounded-lg mb-4">
+            <h2 class="text-gray-700 text-sm">Balance</h2>
+            <p class="text-2xl font-semibold">0</p>
+            <p class="text-sm text-gray-400">0 available</p>
+        </div>
+
+        <!-- Receiving Address -->
+        <div class="bg-white p-4 shadow rounded-lg mb-4">
+            <label for="address" class="block text-sm font-medium text-gray-700">Receiving Address</label>
+            <div class="flex items-center mt-1">
+                <input type="text" id="address" placeholder="0x..." class="flex-grow p-2 border rounded-lg focus:ring-2 focus:ring-indigo-500" />
+                <button class="p-2 ml-2 text-gray-600">
+                    <i class="fas fa-qrcode"></i>
+                </button>
+            </div>
+            <p class="text-sm text-gray-400 mt-1">Fill in the address of the recipient</p>
+        </div>
+
+        <!-- Amount Section -->
+        <div class="bg-white p-4 shadow rounded-lg mb-4">
+            <label for="amount" class="block text-sm font-medium text-gray-700">Amount</label>
+            <input type="number" id="amount" placeholder="0" class="w-full p-2 mt-1 border rounded-lg focus:ring-2 focus:ring-indigo-500" />
+            <p class="text-sm text-gray-400 mt-1">Fill in the amount that you want to send</p>
+        </div>
+
+        <!-- Memo Section -->
+        <div class="bg-white p-4 shadow rounded-lg mb-4">
+            <label for="memo" class="block text-sm font-medium text-gray-700">Memo</label>
+            <input type="text" id="memo" placeholder="gm and gn" class="w-full p-2 mt-1 border rounded-lg focus:ring-2 focus:ring-indigo-500" />
+        </div>
+
+        <!-- Details Section -->
+        <div class="bg-white p-4 shadow rounded-lg mb-4">
+            <h2 class="text-gray-700 text-lg font-semibold mb-4">Details</h2>
+            <div class="flex justify-between mb-2">
+                <span class="text-gray-700">Receiving address</span>
+                <span class="text-gray-400">-----</span>
+            </div>
+            <div class="flex justify-between mb-2">
+                <span class="text-gray-700">Sending amount</span>
+                <span class="text-gray-400">-----</span>
+            </div>
+            <div class="flex justify-between mb-2">
+                <span class="text-gray-700">Estimated fees</span>
+                <span class="text-gray-400">-----</span>
+            </div>
+            <button class="w-full p-2 mt-4 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">Continue</button>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex justify-between items-center mt-6">
+            <button class="flex items-center space-x-2 text-gray-600 p-2">
+                <i class="fas fa-ban"></i>
+                <span>Cancel</span>
+            </button>
+            <button class="flex items-center space-x-2 bg-indigo-600 text-white p-2 rounded-lg">
+                <i class="fas fa-paper-plane"></i>
+                <span>Send</span>
+            </button>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
+</body>
+
+</html>
