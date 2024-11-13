@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
     <script src="https://unpkg.com/unlazy@0.11.3/dist/unlazy.with-hashing.iife.js" defer init></script>
     <script type="text/javascript">
@@ -102,17 +103,29 @@
 <body class="pl-40 pr-40 pt-10">
     <div class="p-4">
         <div class="flex justify-between mb-4">
-            <div class="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full"></div>
-            <!-- <h1 class="ml-2 text-xl font-bold">Wallet Manager</h1> -->
+            <div class="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg"></div>
             <div class="flex items-center justify-center border text-2xl p-2 rounded-lg"><i class="fa fa-cog"></i></div>
         </div>
 
-        <div class="flex items-center justify-center bg-green-300 p-20 rounded-lg mb-4">
-            <button id="loadWalletBtn" class="bg-black text-white hover:bg-black/80 p-2 rounded">
-                <i class="fa-solid fa-key"></i>
-                Load wallet from Passkey
+        <div
+            class="relative p-20 mb-4 items-center justify-between border rounded-lg bg-gradient-to-r from-green-400 to-yellow-300">
+            <div class="absolute top-4 left-4 flex items-center">
+                <div
+                    class="w-10 h-10 rounded-full bg-gradient-to-r from-red-500 to-blue-500 flex items-center justify-center text-white">
+                </div>
+                <span class="ml-2 text-black"> {{ account_data.name }} </span>
+                <span class="ml-1 text-zinc-600"><i class="fa fa-pen"></i></span>
+            </div>
+            <button class="absolute bottom-4 right-4 bg-black text-white px-4 py-2 rounded-lg hover:bg-zinc-800">
+                <span class="flex items-center">
+                    <svg aria-hidden="true" class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10 0a10 10 0 100 20 10 10 0 000-20zm1 15h-2v-2h2v2zm0-3h-2V7h2v5z" />
+                    </svg>
+                    Portfolio
+                </span>
             </button>
         </div>
+
 
         <div class="mb-4">
             <h2 class="font-semibold">Addresses</h2>
@@ -121,38 +134,38 @@
                     <img src="https://www.gmgn.app/logos/evm.svg" alt="">
                     <span class="mr-2 w-20">EVM</span>
                 </div>
-                <input type="text" class="p-2 flex-grow" placeholder="0xisfdusif">
+                <input type="text" class="border rounded p-2 flex-grow" value="{{account_data.address}}" readonly>
                 <button class="ml-2 bg-zinc-200 p-2 rounded">📋</button>
             </div>
             <div class="flex items-center">
                 <div class="flex justify-center w-40 space-x-2 p-2 h-10 bg-black text-white">
-                    <img src="https://www.gmgn.app/logos/polkadot.svg" alt="">
-                    <span class="mr-2 w-20">Polkadot</span>
+                    <img src="https://bscscan.com/assets/bsc/images/svg/logos/token-light.svg?v=24.10.4.0" alt="">
+                    <span class="mr-2 w-20">Balance</span>
                 </div>
-                <input type="text" class="border rounded p-2 flex-grow" placeholder="---------------">
-                <button class="ml-2 bg-zinc-200 p-2 rounded">📋</button>
+                <input type="text" class="border rounded p-2 flex-grow" value="{{account_data.balance}}" readonly>
+                <span class="ml-2 w-20">Token BSC</span>
             </div>
         </div>
 
         <div class="mb-4">
             <h2 class="font-semibold">Actions</h2>
             <div class="flex space-x-2">
-                <button class="flex justify-center items-center space-x-2 bg-black text-white p-2 rounded">
+                <a href="/send" class="flex justify-center items-center space-x-2 bg-black text-white p-2 rounded">
                     <i class="fa-solid fa-paper-plane"></i>
                     <p>Send</p>
-                </button>
-                <button class="flex justify-center items-center space-x-2 bg-black text-white p-2 rounded">
+                </a>
+                <a href="/receive" class="flex justify-center items-center space-x-2 bg-black text-white p-2 rounded">
                     <i class="fa-solid fa-circle-arrow-down"></i>
                     <p>Receive</p>
-                </button>
-                <button class="flex justify-center items-center space-x-2 bg-black text-white p-2 rounded">
+                </a>
+                <a href="/transactions" class="flex justify-center items-center space-x-2 bg-black text-white p-2 rounded">
                     <i class="fa-solid fa-bars"></i>
                     <p>Transactions</p>
-                </button>
-                <button class="flex justify-center items-center space-x-2 bg-black text-white p-2 rounded">
+                </a>
+                <a href="/pay" class="flex justify-center items-center space-x-2 bg-black text-white p-2 rounded">
                     <i class="fa-solid fa-money-check-dollar"></i>
                     <p>Pay</p>
-                </button>
+                </a>                
             </div>
         </div>
 

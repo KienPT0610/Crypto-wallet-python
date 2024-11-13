@@ -102,18 +102,35 @@
 <body class="pl-40 pr-40 pt-10">
     <div class="p-4">
         <div class="flex justify-between mb-4">
-            <div class="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full"></div>
+            <div class="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg"></div>
             <!-- <h1 class="ml-2 text-xl font-bold">Wallet Manager</h1> -->
             <div class="flex items-center justify-center border text-2xl p-2 rounded-lg"><i class="fa fa-cog"></i></div>
         </div>
 
+        {% if not isCreated %}
+
         <div class="flex items-center justify-center bg-green-300 p-20 rounded-lg mb-4">
-            <button id="loadWalletBtn" class="bg-secondary text-secondary-foreground hover:bg-secondary/80 p-2 rounded">
+            <button id="createWalletBtn"
+                class="bg-secondary text-secondary-foreground hover:bg-secondary/80 p-2 rounded">
                 <i class="fa-solid fa-key"></i>
                 Create wallet with Passkey
             </button>
         </div>
 
+        {% else %}
+
+        <div class="flex flex-col items-center justify-center bg-green-300 p-20 rounded-lg mb-4">
+            <button id="loadWalletBtn"
+                class="bg-secondary text-secondary-foreground hover:bg-secondary/80 mb-2 p-2 rounded">
+                <i class="fa-solid fa-key"></i>
+                Load wallet with Passkey
+            </button>
+            {% if error %}
+            <span class="text-red-500">{{ error }}</span>
+            {% endif %}
+        </div>
+
+        {% endif %}
         <div class="mb-4">
             <h2 class="font-semibold">Addresses</h2>
             <div class="flex items-center mb-2">
@@ -121,7 +138,7 @@
                     <img src="https://www.gmgn.app/logos/evm.svg" alt="">
                     <span class="mr-2 w-20">EVM</span>
                 </div>
-                <input type="text" class="p-2 flex-grow" placeholder="---------------">
+                <input type="text" class="p-2 flex-grow" value="---------------" readonly>
                 <button class="ml-2 bg-zinc-200 p-2 rounded">📋</button>
             </div>
             <div class="flex items-center">
@@ -129,8 +146,7 @@
                     <img src="https://www.gmgn.app/logos/polkadot.svg" alt="">
                     <span class="mr-2 w-20">Polkadot</span>
                 </div>
-                <input type="text" class="border rounded p-2 flex-grow" placeholder="---------------">
-                <button class="ml-2 bg-zinc-200 p-2 rounded">📋</button>
+                <input type="text" class="border rounded p-2 flex-grow" value="---------------" readonly>
             </div>
         </div>
 
@@ -202,6 +218,7 @@
             <h2 class="text-lg font-bold">Create</h2>
             <span>Enter any username to create a wallet</span>
             <input type="text" id="walletNameInput" class="border rounded p-2 mb-2" placeholder="joihsmith">
+            <input type="password" id="walletPasswordInput" class="border rounded p-2 mb-2" placeholder="Passkey">
             <div class="flex justify-end">
                 <button id="submitWalletName" class="bg-blue-500 text-white p-2 rounded">Create</button>
                 <button id="closeModal" class="bg-red-500 text-white p-2 rounded ml-2">Cancel</button>
@@ -210,13 +227,14 @@
     </div>
 
 
+
     <script>
-        const loadWalletBtn = document.getElementById('loadWalletBtn');
+        const createWalletBtn = document.getElementById('createWalletBtn');
         const walletModal = document.getElementById('walletModal');
         const closeModal = document.getElementById('closeModal');
         const submitWalletName = document.getElementById('submitWalletName');
 
-        loadWalletBtn.addEventListener('click', () => {
+        createWalletBtn.addEventListener('click', () => {
             walletModal.classList.remove('hidden');
         });
 
@@ -226,6 +244,12 @@
 
         submitWalletName.addEventListener('click', () => {
             const walletName = document.getElementById('walletNameInput').value;
+            const walletPassword = document.getElementById('walletPasswordInput').value;
+
+            if (!walletName || !walletPassword) {
+                alert('Nhập đủ thông tin');
+                return;
+            }
 
             // Gửi dữ liệu qua form (bằng cách tạo một form động)
             const form = document.createElement('form');
@@ -238,10 +262,68 @@
             input.name = 'walletNameInput';  // Tên phải trùng với tên trong Flask
             input.value = walletName;
 
+            const input2 = document.createElement('input');
+            input2.type = 'hidden';
+            input2.name = 'walletPasswordInput';  // Tên phải trùng với tên trong Flask
+            input2.value = walletPassword;
+
+            form.appendChild(input);
+            form.appendChild(input2);
+            document.body.appendChild(form);
+            form.submit();  // Gửi form đến Flask
+        });
+    </script>
+
+    <div id="walletPasswordModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
+        <div class="bg-white flex flex-col space-y-2 p-4 rounded">
+            <h2 class="text-lg font-bold">Enter Passkey</h2>
+            <span>Enter passkey to login</span>
+            <input type="password" id="walletPasswordLoginInput" class="border rounded p-2 mb-2" placeholder="Passkey">
+            <div class="flex justify-end">
+                <button id="loginWallet" class="bg-blue-500 text-white p-2 rounded">Login</button>
+                <button id="closePasswordModal" class="bg-red-500 text-white p-2 rounded ml-2">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const loginWallet = document.getElementById('loginWallet');
+        const walletPasswordModal = document.getElementById('walletPasswordModal');
+        const closePasswordModal = document.getElementById('closePasswordModal');
+        const loadWalletBtn = document.getElementById('loadWalletBtn');
+
+        loadWalletBtn.addEventListener('click', () => {
+            walletPasswordModal.classList.remove('hidden');
+        });
+
+        closePasswordModal.addEventListener('click', () => {
+            walletPasswordModal.classList.add('hidden');
+        });
+
+        loginWallet.addEventListener('click', () => {
+            const walletPassword = document.getElementById('walletPasswordLoginInput').value;
+
+            if (!walletPassword) {
+                alert('Nhập đủ thông tin');
+                return;
+            }
+
+            // Gửi dữ liệu qua form (bằng cách tạo một form động)
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '/';  // Địa chỉ gửi đến Flask
+
+            // Tạo input ẩn để gửi walletPassword
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'walletPasswordInput';  // Tên phải trùng với tên trong Flask
+            input.value = walletPassword;
+
             form.appendChild(input);
             document.body.appendChild(form);
             form.submit();  // Gửi form đến Flask
         });
+
     </script>
 
 </body>
