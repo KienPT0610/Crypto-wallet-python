@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Send Tokens</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body class="bg-gray-100 font-sans text-gray-800">
+    <div class="max-w-md mx-auto p-6">
+      <!-- Header Section -->
+      <header class="flex items-center justify-between mb-6">
+        <button class="text-gray-600" onclick="history.back()">
+          <i class="fas fa-arrow-left"></i> Go back
+        </button>
+        <h1 class="text-3xl font-bold">Send</h1>
+        <button class="p-2 text-gray-600 rounded-full">
+          <i class="fas fa-cog"></i>
+        </button>
+      </header>
+
+      <!-- Send / Message Tab -->
+      <div class="flex mb-4">
+        <button
+          class="w-1/2 text-center py-2 font-semibold border-b-2 border-black"
+        >
+          Send
+        </button>
+        <button
+          class="w-1/2 text-center py-2 font-semibold text-gray-400 border-b-2"
+        >
+          Message
+        </button>
+      </div>
+
+      <!-- Token Selection -->
+      <div class="bg-white p-4 shadow rounded-lg mb-4">
+        <label for="token" class="block text-sm font-medium text-gray-700"
+          >Sending Token</label
+        >
+        <select
+          id="token"
+          class="w-full p-2 mt-1 border rounded-lg focus:ring-2 focus:ring-indigo-500"
+        >
+          <option>KAIA - Kaia Kairos</option>
+        </select>
+      </div>
+
+      <!-- Balance Section -->
+      <div class="bg-white p-4 shadow rounded-lg mb-4">
+        <h2 class="text-gray-700 text-sm">Balance</h2>
+        <p class="text-2xl font-semibold">0</p>
+        <p class="text-sm text-gray-400">0 available</p>
+      </div>
+
+      <!-- Receiving Address -->
+      <div class="bg-white p-4 shadow rounded-lg mb-4">
+        <label for="address" class="block text-sm font-medium text-gray-700"
+          >Receiving Address</label
+        >
+        <div class="flex items-center mt-1">
+          <input
+            type="text"
+            id="address"
+            placeholder="0x..."
+            class="flex-grow p-2 border rounded-lg focus:ring-2 focus:ring-indigo-500"
+          />
+          <button
+            title="Scan QR Code"
+            class="p-2 ml-2 text-gray-600"
+            id="openModalQrCodeBtn"
+          >
+            <i class="fas fa-qrcode"></i>
+          </button>
+        </div>
+        <p class="text-sm text-gray-400 mt-1">
+          Fill in the address of the recipient
+        </p>
+      </div>
+
+      <!-- Amount Section -->
+      <div class="bg-white p-4 shadow rounded-lg mb-4">
+        <label for="amount" class="block text-sm font-medium text-gray-700"
+          >Amount</label
+        >
+        <input
+          type="number"
+          id="amount"
+          placeholder="0"
+          class="w-full p-2 mt-1 border rounded-lg focus:ring-2 focus:ring-indigo-500"
+        />
+        <p class="text-sm text-gray-400 mt-1">
+          Fill in the amount that you want to send
+        </p>
+      </div>
+
+      <!-- Memo Section -->
+      <div class="bg-white p-4 shadow rounded-lg mb-4">
+        <label for="memo" class="block text-sm font-medium text-gray-700"
+          >Memo</label
+        >
+        <input
+          type="text"
+          id="memo"
+          placeholder="gm and gn"
+          class="w-full p-2 mt-1 border rounded-lg focus:ring-2 focus:ring-indigo-500"
+        />
+      </div>
+
+      <!-- Details Section -->
+      <div class="bg-white p-4 shadow rounded-lg mb-4">
+        <h2 class="text-gray-700 text-lg font-semibold mb-4">Details</h2>
+        <div class="flex justify-between mb-2">
+          <span class="text-gray-700">Receiving address</span>
+          <span class="text-gray-400">-----</span>
+        </div>
+        <div class="flex justify-between mb-2">
+          <span class="text-gray-700">Sending amount</span>
+          <span class="text-gray-400">-----</span>
+        </div>
+        <div class="flex justify-between mb-2">
+          <span class="text-gray-700">Estimated fees</span>
+          <span class="text-gray-400">-----</span>
+        </div>
+        <button
+          class="w-full p-2 mt-4 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
+        >
+          Continue
+        </button>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex justify-between items-center mt-6">
+        <button class="flex items-center space-x-2 text-gray-600 p-2">
+          <i class="fas fa-ban"></i>
+          <span>Cancel</span>
+        </button>
+        <button
+          class="flex items-center space-x-2 bg-indigo-600 text-white p-2 rounded-lg"
+        >
+          <i class="fas fa-paper-plane"></i>
+          <span>Send</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Modal QR Scanner -->
+    <div id="qrModal" class="fixed inset-0 z-50 bg-black bg-opacity-80 hidden">
+      <div
+        class="flex flex-col items-center justify-center relative top-10 h-[80%] w-full max-w-md mx-auto bg-white p-4 rounded-lg text-center"
+      >
+        <!-- Close Button -->
+        <span
+          id="closeModalBtn"
+          class="absolute top-2 right-2 w-8 h-8 text-2xl font-bold cursor-pointer text-gray-500 hover:text-gray-700"
+        >
+          &times;
+        </span>
+
+        <!-- Modal Header -->
+        <h2 class="text-2xl font-semibold text-gray-800 mb-4">QR Scanner</h2>
+
+        <!-- Modal Content -->
+        <p class="text-gray-500 mb-6">Scan QR code to autofill</p>
+
+        <!-- Video for QR Scanning -->
+        <video
+          id="video"
+          autoplay
+          class="w-full max-w-xs border-2 border-red-500 rounded-lg mb-20"
+        ></video>
+      </div>
+    </div>
+    <script>
+      const openModalBtn = document.getElementById("openModalQrCodeBtn");
+      const qrModal = document.getElementById("qrModal");
+      const closeModalBtn = document.getElementById("closeModalBtn");
+      const video = document.getElementById("video");
+      const receivingAddressInput = document.getElementById("address");
+      let captureIntervalId;
+      let receivingAddressInputContent = "";
+
+      // Open modal
+      openModalBtn.addEventListener("click", () => {
+        qrModal.style.display = "block";
+        startCamera();
+      });
+
+      // Close modal
+      closeModalBtn.addEventListener("click", () => {
+        if (receivingAddressInputContent.trim().length > 0) {
+          receivingAddressInput.value = receivingAddressInputContent;
+        }
+        qrModal.style.display = "none";
+        stopCamera();
+      });
+
+      // Start cam
+      function startCamera() {
+        navigator.mediaDevices
+          .getUserMedia({ video: { facingMode: "environment" } })
+          .then((stream) => {
+            video.srcObject = stream;
+            const videoTrack = stream.getVideoTracks()[0];
+            const imageCapture = new ImageCapture(videoTrack);
+
+            // send images to the server every second
+            captureIntervalId = setInterval(() => {
+              imageCapture
+                .grabFrame()
+                .then((imageBitmap) => {
+                  const canvas = document.createElement("canvas");
+                  canvas.width = imageBitmap.width;
+                  canvas.height = imageBitmap.height;
+                  const ctx = canvas.getContext("2d");
+                  ctx.drawImage(imageBitmap, 0, 0);
+                  canvas.toBlob((blob) => {
+                    // Send image as blob to server and receive content of QR Code
+                    fetch("/read_qrcode", {
+                      method: "POST",
+                      body: blob,
+                      headers: {
+                        "Content-Type": "application/octet-stream",
+                      },
+                    })
+                      .then((response) => {
+                        if (response.ok) {
+                          return response.json();
+                        } else {
+                          return null;
+                          console.error(
+                            "Có lỗi xảy ra:",
+                            response.status,
+                            response.statusText
+                          );
+                          throw new Error(
+                            "Network response was not ok: " +
+                              response.statusText
+                          );
+                        }
+                      })
+                      .then((data) => {
+                        if (data && data.qr_data) {
+                          receivingAddressInputContent = data.qr_data;
+                          alert("Dữ liệu QR: " + data.qr_data);
+                        } else {
+                          console.log("Không phát hiện được QR code.");
+                        }
+                      }) // receive data as string
+                      .catch((err) =>
+                        console.error("Lỗi khi phân tích mã QR: ", err)
+                      );
+                  });
+                })
+                .catch((error) =>
+                  console.error("Lỗi khi gửi ảnh đến server:", error)
+                );
+            }, 1000);
+          })
+          .catch((err) => {
+            console.error("Không truy cập được camera: ", err);
+            alert("Không mở được camera!");
+            qrModal.style.display = "none";
+          });
+      }
+
+      // Close camera
+      function stopCamera() {
+        const stream = video.srcObject;
+        if (stream) {
+          const tracks = stream.getTracks();
+          tracks.forEach((track) => track.stop());
+          video.srcObject = null;
+        }
+        clearInterval(captureIntervalId);
+      }
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
+  </body>
+</html>
