@@ -107,30 +107,35 @@
             <div class="flex items-center justify-center border text-2xl p-2 rounded-lg"><i class="fa fa-cog"></i></div>
         </div>
 
-        {% if not isCreated %}
 
-        <div class="flex items-center justify-center bg-green-300 p-20 rounded-lg mb-4">
+        <div class="flex flex-col items-center justify-center bg-green-300 p-20 rounded-lg mb-4">
+            {% if not isCreated %}
             <button id="createWalletBtn"
-                class="bg-secondary text-secondary-foreground hover:bg-secondary/80 p-2 rounded">
+                class="bg-secondary text-secondary-foreground hover:bg-secondary/80 mb-2 p-2 rounded">
                 <i class="fa-solid fa-key"></i>
                 Create wallet with Passkey
             </button>
-        </div>
 
-        {% else %}
+            {% else %}
 
-        <div class="flex flex-col items-center justify-center bg-green-300 p-20 rounded-lg mb-4">
             <button id="loadWalletBtn"
                 class="bg-secondary text-secondary-foreground hover:bg-secondary/80 mb-2 p-2 rounded">
                 <i class="fa-solid fa-key"></i>
                 Load wallet with Passkey
             </button>
+
+            {% endif %}
+            <button id="loginWalletWithPrivateKeyBtn"
+                class="bg-secondary text-secondary-foreground hover:bg-secondary/80 mb-2 p-2 rounded">
+                <i class="fa-solid fa-key"></i>
+                Login with Private Key
+            </button>
+
             {% if error %}
             <span class="text-red-500">{{ error }}</span>
             {% endif %}
         </div>
 
-        {% endif %}
         <div class="mb-4">
             <h2 class="font-semibold">Addresses</h2>
             <div class="flex items-center mb-2">
@@ -228,6 +233,8 @@
 
 
 
+
+
     <script>
         const createWalletBtn = document.getElementById('createWalletBtn');
         const walletModal = document.getElementById('walletModal');
@@ -272,6 +279,60 @@
             document.body.appendChild(form);
             form.submit();  // Gửi form đến Flask
         });
+    </script>
+
+    <div id="walletPrivateKeyModal"
+        class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
+        <div class="bg-white flex flex-col space-y-2 p-4 rounded">
+            <h2 class="text-lg font-bold">Login</h2>
+            <span>Enter private key to login</span>
+            <input type="password" id="walletPrivateKeyInput" class="border rounded p-2 mb-2" placeholder="Privatekey...">
+            <div class="flex justify-end">
+                <button id="loginWalletWithPrivateKey" class="bg-blue-500 text-white p-2 rounded">Login</button>
+                <button id="closeWalletPrivateKeyModal" class="bg-red-500 text-white p-2 rounded ml-2">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const loginWalletWithPrivateKeyBtn = document.getElementById('loginWalletWithPrivateKeyBtn');
+        const walletPrivateKeyModal = document.getElementById('walletPrivateKeyModal');
+        const closeWalletPrivateKeyModal = document.getElementById('closeWalletPrivateKeyModal');
+        const loginWalletWithPrivateKey = document.getElementById('loginWalletWithPrivateKey');
+        
+        
+        loginWalletWithPrivateKeyBtn.addEventListener('click', () => {
+            walletPrivateKeyModal.classList.remove('hidden');
+        });
+
+        closeWalletPrivateKeyModal.addEventListener('click', () => {
+            walletPrivateKeyModal.classList.add('hidden');
+        });
+
+        loginWalletWithPrivateKey.addEventListener('click', () => {
+            const walletPrivateKey = document.getElementById('walletPrivateKeyInput').value;
+
+            if (!walletPrivateKey) {
+                alert('Nhập đủ thông tin');
+                return;
+            }
+
+            // Gửi dữ liệu qua form (bằng cách tạo một form động)
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '/login-privatekey';  // Địa chỉ gửi đến Flask
+
+            // Tạo input ẩn để gửi walletPrivateKey
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'walletPrivateKeyInput';  // Tên phải trùng với tên trong Flask
+            input.value = walletPrivateKey;
+
+            form.appendChild(input);
+            document.body.appendChild(form);
+            form.submit();  // Gửi form đến Flask
+        });
+
     </script>
 
     <div id="walletPasswordModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">

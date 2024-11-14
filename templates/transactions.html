@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transaction History</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 20px;
+        }
+        .container {
+            margin-top: 50px;
+        }
+        .table-container {
+            margin-bottom: 40px;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2 class="text-center mb-4">Transaction History</h2>
+
+    <!-- Buttons to toggle between Send and Receive transactions -->
+    <div class="text-center mb-4">
+        <button class="btn btn-primary" onclick="showSendTransactions()">Send Transactions</button>
+        <button class="btn btn-secondary" onclick="showReceiveTransactions()">Receive Transactions</button>
+    </div>
+
+    <!-- Send Transactions Section (visible by default) -->
+    <div id="sendTransactions" class="table-container">
+        <h3>Send Transactions</h3>
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Transaction ID</th>
+                    <th>To</th>
+                    <th>Amount (ETH)</th>
+                    <th>Memo</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for transaction in send_transactions %}
+                <tr>
+                    <td>{{ transaction[0] }}</td> <!-- ID -->
+                    <td>{{ transaction[2] }}</td> <!-- To -->
+                    <td>{{ transaction[3] / 10**18 }} ETH</td> <!-- Amount, assuming it's in Wei and converting to Ether -->
+                    <td>{{ transaction[4] }}</td> <!-- Memo -->
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Receive Transactions Section (hidden by default) -->
+    <div id="receiveTransactions" class="table-container hidden">
+        <h3>Receive Transactions</h3>
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Transaction ID</th>
+                    <th>From</th>
+                    <th>Amount (ETH)</th>
+                    <th>Memo</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for transaction in receive_transactions %}
+                <tr>
+                    <td>{{ transaction[0] }}</td> <!-- ID -->
+                    <td>{{ transaction[1] }}</td> <!-- From -->
+                    <td>{{ transaction[3] / 10**18 }} ETH</td> <!-- Amount, assuming it's in Wei and converting to Ether -->
+                    <td>{{ transaction[4] }}</td> <!-- Memo -->
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script>
+    // Function to show send transactions
+    function showSendTransactions() {
+        document.getElementById('sendTransactions').classList.remove('hidden');
+        document.getElementById('receiveTransactions').classList.add('hidden');
+    }
+
+    // Function to show receive transactions
+    function showReceiveTransactions() {
+        document.getElementById('receiveTransactions').classList.remove('hidden');
+        document.getElementById('sendTransactions').classList.add('hidden');
+    }
+
+    // Set default view to send transactions
+    window.onload = function() {
+        showSendTransactions();
+    }
+</script>
+
+</body>
+</html>

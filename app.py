@@ -1,5 +1,6 @@
-from flask import Flask, render_template ,request, jsonify, session, send_file, redirect
-from lib.account_wallet import create_account, login_account
+from flask import *
+from lib.account_wallet import *
+from lib.down_json_account import *
 import os
 import qrcode
 import io
@@ -14,9 +15,6 @@ app.secret_key = os.urandom(24)
 @app.route("/", methods=["GET", "POST"])
 def index():
     print("Dữ liệu phiên khi vào trang:", session)
-    # Check if session is created
-    if session is None:
-        session.clear()
 
     if session.get("isCreated") is None:
         session["isCreated"] = False
@@ -24,6 +22,7 @@ def index():
     if session.get("isCreated") is False:
         if request.method == "POST":
            create_account()
+           return download_file(session["walletName"], session["account_data"]["address"], session["account_data"]["private_key"])
         
     # If session is not created
     else:
@@ -33,20 +32,24 @@ def index():
                 return render_template("index.html", isCreated=session.get("isCreated"), error="Login Failded")
             else:
                 account, balance = result
-                account_data = {
-                    "name": session["walletName"],
-                    "address": account.address,
-                    "balance": balance,
-                    "private_key": account._private_key.hex()
-                }
-                session["isLogin"] = True
-                session["account_data"] = account_data
+                set_session_account_data(account, balance)
                 return redirect(f"/account/{account.address}")
     return render_template("index.html", isCreated=session["isCreated"])
+
+@app.route("/login-privatekey", methods=["POST"])
+def login_private_key():
+    result = login_with_private_key()
+    if result is None:
+        return "Login failed"
+    else:
+        account, balance = result
+        set_session_account_data(account, balance)
+        return redirect(f"/account/{account.address}")
 
 
 @app.route("/account/<address>", methods=["GET"])
 def account_detail(address):
+    session["account_data"]["balance"] = getBalances(address)
     return render_template("account_login.html", account_data=session["account_data"])
 
 
@@ -75,8 +78,17 @@ def create_request():
     return jsonify({"message": response_message})
 
 @app.route("/send", methods=["GET", "POST"])
-def send_tokens():    
+def send_tokens():
+    if request.method == "POST":
+        sendTokens()  
+        return redirect("/account/" + session["account_data"]["address"])
     return render_template("send.html", account_data=session["account_data"])
+
+@app.route("/transactions", methods=["GET"])
+def transactions():
+    send_transactions, receive_transactions = getTransactions(session["account_data"]["address"])
+    return render_template("transactions.html", send_transactions=send_transactions, receive_transactions=receive_transactions)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
